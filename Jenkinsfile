@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
   - name: curl # to make requests
-    image: nixery.dev/shell/curl
+    image: curlimages/curl
     resources:
       requests:
         memory: "8Mi"
