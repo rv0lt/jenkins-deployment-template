@@ -12,11 +12,11 @@ spec:
     image: curlimages/curl
     resources:
       requests:
-        memory: "8Mi"
-        cpu: "10m"
+        memory: "32Mi"
+        cpu: "100m"
       limits:
-        memory: "8Mi"
-        cpu: "10m"
+        memory: "32Mi"
+        cpu: "100m"
     command:
     - sleep
     args:
