@@ -52,7 +52,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
       - name: follower
-        image: gcr.io/google_samples/gb-redis-follower:v2
+        image: redis:7.0
         ports:
         - containerPort: 6379
         securityContext:
@@ -67,3 +67,7 @@ spec:
           requests:
             memory: "400Mi"
             cpu: "100m"
+        command:
+          - redis-server
+        args:
+          - --replicaof redis-leader 6379
