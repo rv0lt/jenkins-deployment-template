@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  ports:
+    - port: 5000
+  selector:
+    app: webapp
+    tier: flask
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp
+  labels:
+    app: webapp
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+      tier: flask
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: webapp
+        tier: flask
+    spec:
+      securityContext:
+        runAsUser: 1000
+      containers:
+      - image: rv0lt/flaskrediswebapp:distroless
+        name: webapp
+        env:
+        - name: R_HOSTNAME
+          value: redis-leader
+        - name: REDIS_PWD
+          valueFrom:
+            secretKeyRef:
+              name: redis-pass-8c79cg5kk9
+              key: password
+        securityContext:
+          privileged: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+        resources:
+          limits:
+            memory: "800Mi"
+            cpu: "800m"
+          requests:
+            memory: "600Mi"
+            cpu: "400m"
+        ports:
+        - containerPort: 5000
+          name: webapp
